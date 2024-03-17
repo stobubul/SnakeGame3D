@@ -22,8 +22,8 @@ public class SpawnObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //E basınca rastgele bir noktada elma oluşur
-        if(Input.GetKeyDown(KeyCode.E))
+        //P basınca rastgele bir noktada elma oluşur
+        if(Input.GetKeyDown(KeyCode.P))
             SpawnFood();
     }
 

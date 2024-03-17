@@ -11,29 +11,16 @@ public class SnakeHead : MonoBehaviour
     
     public AudioSource eatAudioSource;
     public AudioClip eatSound;
-    public float originalVolume;
     
     void Start()
     {
-        originalVolume = eatAudioSource.volume;
         eatAudioSource = gameObject.GetComponent<AudioSource>();
         eatAudioSource.clip = eatSound;
     }
 
     private void Update()
     {
-        //Ses açıp kapama
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            if (eatAudioSource.volume == 0f)
-            {
-                eatAudioSource.volume = originalVolume;
-            }
-            else
-            {
-                eatAudioSource.volume = 0f;
-            }
-        }
+        
     }
 
     private void OnCollisionEnter(Collision col)

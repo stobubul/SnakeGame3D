@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.WSA;
+using Cursor = UnityEngine.Cursor;
 
 public class SnakeController : MonoBehaviour
 {
@@ -38,13 +40,13 @@ public class SnakeController : MonoBehaviour
     public AudioClip dieSound;
     public AudioClip dieMusic;
     public AudioClip crawlSound;
-    private float originalVolume;
+    
+    public Gradient gold;
     
     // Start is called before the first frame update
     void Start()
     {
         StartLevel();
-        originalVolume = src.volume;
     }
 
     public void StartLevel()
@@ -78,7 +80,7 @@ public class SnakeController : MonoBehaviour
         
         src.clip = crawlSound;
         src.loop = true;
-        src.volume = 0.3f;
+        src.volume = 0.8f;
         src.Play();
         
         //MAX SKOR
@@ -117,11 +119,11 @@ public class SnakeController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            QuitGame();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
         
-        //Q basınca kuyruk ekler
-        if(Input.GetKeyDown(KeyCode.Q))
+        //O basınca kuyruk/skor ekler
+        if(Input.GetKeyDown(KeyCode.O))
             AddBodyPart();
         
         if (Input.GetKeyDown(KeyCode.UpArrow))
@@ -131,19 +133,6 @@ public class SnakeController : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.UpArrow))
         {
             src.pitch -= 0.5f;
-        }
-
-        //Ses açıp kapama
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            if (src.volume == 0f)
-            {
-                src.volume = originalVolume;
-            }
-            else
-            {
-                src.volume = 0f;
-            }
         }
         
         //R basınca oyunu yeniden başlatma
@@ -204,9 +193,16 @@ public class SnakeController : MonoBehaviour
         IsAlive = false;
 
         if (maybeMaxScore > maxScore)
+        {
             maxScore = maybeMaxScore;
-        
-        ScoreText.text = "Your score was " + (BodyParts.Count - beginSize - 1).ToString();
+            ScoreText.text = "Your NEW RECORD is " + (BodyParts.Count - beginSize - 1).ToString();
+            ScoreText.color = gold.Evaluate(1f);
+        }
+        else
+        {
+            ScoreText.text = "Your score was " + (BodyParts.Count - beginSize - 1).ToString();
+            ScoreText.color = Color.white;
+        }
         
         CurrentScore.gameObject.SetActive(false);
         maxScoreText.gameObject.SetActive(false);
@@ -215,7 +211,7 @@ public class SnakeController : MonoBehaviour
         
         src.clip = dieSound;
         src.loop = false;
-        src.volume = 0.2f;
+        src.volume = 0.6f;
         src.Play();
 
         StartCoroutine(PlayDieSoundThenContinue());
@@ -225,14 +221,8 @@ public class SnakeController : MonoBehaviour
             yield return new WaitForSeconds(1f);
             src.clip = dieMusic;
             src.loop = true;
-            src.volume = 0.066f;
+            src.volume = 0.2f;
             src.Play();
         }
-    }
-    
-    void QuitGame()
-    {
-        Debug.Log("Oyun kapatılıyor...");
-        Application.Quit();
     }
 }
